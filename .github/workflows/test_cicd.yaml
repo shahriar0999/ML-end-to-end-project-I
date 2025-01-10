@@ -85,4 +85,4 @@ jobs:
 
             # Run Streamlit app
             nohup streamlit run streamlitApp.py --server.port 8501 > streamlit.log 2>&1 &
-          EOF
+            EOF
