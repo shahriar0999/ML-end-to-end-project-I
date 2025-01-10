@@ -1,5 +1,4 @@
 temp
-ml-models
 Dockerfile
 .dockerignore
 human_pose_classification
