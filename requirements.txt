@@ -10,3 +10,4 @@ fastapi==0.115.6
 pytest==8.3.4
 httpx==0.28.1
 fastapi[all]
+torchvision==0.20.1
