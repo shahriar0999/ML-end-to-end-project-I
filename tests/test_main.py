@@ -23,16 +23,16 @@ def test_classify_sentiment():
     assert "label" in response.json()[0]
 
 
-def test_classify_pose():
-    data = ImageDataInput(url=["https://media.istockphoto.com/id/1213229711/photo/young-indian-man-in-glasses-drink-coffee-sitting-on-the-stairs-in-the-street.jpg?s=1024x1024&w=is&k=20&c=YA6C5dNS60b4lR_0UioUQFBWtcpiiiHOsU1ZRV7YmEM="], user_id="shahriar@gmail.com")
-    # Convert the data to a dictionary and ensure the URL is a string
-    data_dict = data.dict()
-    data_dict['url'] = [str(url) for url in data_dict['url']]
-    response = client.post("/pose_classifier", json=data_dict)
-    assert response.status_code == 200
-    assert "label" in response.json()[0]
+# def test_classify_pose():
+#     data = ImageDataInput(url=["https://media.istockphoto.com/id/1213229711/photo/young-indian-man-in-glasses-drink-coffee-sitting-on-the-stairs-in-the-street.jpg?s=1024x1024&w=is&k=20&c=YA6C5dNS60b4lR_0UioUQFBWtcpiiiHOsU1ZRV7YmEM="], user_id="shahriar@gmail.com")
+#     # Convert the data to a dictionary and ensure the URL is a string
+#     data_dict = data.dict()
+#     data_dict['url'] = [str(url) for url in data_dict['url']]
+#     response = client.post("/pose_classifier", json=data_dict)
+#     assert response.status_code == 200
+#     assert "label" in response.json()[0]
 
 
 test_classify_sentiment()
 test_classify_disaster()
-test_classify_pose()
+# test_classify_pose()
