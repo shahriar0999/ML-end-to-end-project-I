@@ -38,7 +38,7 @@ def classify_disaster(data: NLPDataInput):
     output = twitter_model(data.text)
     return output
 
-from IPython.display import display
+# from IPython.display import display
 
 
 # @app.post("/pose_classifier")
