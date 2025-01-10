@@ -4,7 +4,7 @@ import os
 from src import aws_s3
 
 # Define the API endpoint
-API_URL = "http://127.0.0.1:8000/"
+API_URL = "http://127.0.0.1:8502/"
 headers = {
   'Content-Type': 'application/json'
 }
