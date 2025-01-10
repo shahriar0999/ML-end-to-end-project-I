@@ -30,14 +30,14 @@ local_path = 'ml-models/'+model_name
 if not os.path.isdir(local_path) or force_download:
     aws_s3.download_dir(local_path, model_name)
 sentiment_model = pipeline('text-classification', model=local_path, device=device)
-print("download sentiment model")
+print("**download sentiment model")
 
 model_name = "tinybert-disaster-tweet"
 local_path = 'ml-models/'+model_name
 if not os.path.isdir(local_path) or force_download:
     aws_s3.download_dir(local_path, model_name)
 disaster_model = pipeline('text-classification', model=local_path, device=device)
-print('download disaster model')
+print('download disaster model**')
 
     # elif modelType == 'image':
     #     local_path = 'ml-models/'+model_name
