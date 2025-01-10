@@ -12,7 +12,7 @@ headers = {
 st.title("ML Model Serving Over Fast Api")
 
 model = st.selectbox("Select Model",
-                     ["Sentiment Classifier", "Disaster Classifier", "Pose Classifier"])
+                     ["Sentiment Classifier", "Disaster Classifier"])
 
 
 if model == 'Sentiment Classifier':
@@ -35,15 +35,15 @@ elif model == 'Disaster Classifier':
     }
     model_api = "disaster_classifier"
 
-elif model=="Pose Classifier":
+# elif model=="Pose Classifier":
 
-    url = st.text_input("Enter Your Image Url")
+#     url = st.text_input("Enter Your Image Url")
 
 
-    user_id = st.text_input("Enter user id")
+#     user_id = st.text_input("Enter user id")
 
-    data = {"url": [url], "user_id": user_id}
-    model_api = "pose_classifier"
+#     data = {"url": [url], "user_id": user_id}
+#     model_api = "pose_classifier"
 
 if st.button("Predict"):
     with st.spinner("Predicting.... Please Wait!!!!!!!!!"):

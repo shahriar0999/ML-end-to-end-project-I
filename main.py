@@ -56,5 +56,5 @@ def classify_disaster(data: NLPDataInput):
 
 if __name__=="__main__":
     # uvicorn.run(app="main:app", port=8502, reload=True, host="0.0.0.0")
-    uvicorn.run(app="main:app", port=8502)
+    uvicorn.run(app="main:app", port=8502, reload=True, host="0.0.0.0")
 
