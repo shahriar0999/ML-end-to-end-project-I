@@ -5,16 +5,16 @@ warnings.filterwarnings('ignore')
 import uvicorn
 from fastapi import FastAPI
 from fastapi import Request
-from src.models import NLPDataInput, ImageDataInput, project
-from src.download_load_model import download_model
+from src.models import NLPDataInput, project
+from src.download_load_model import sentiment_model, disaster_model
 import requests
 from PIL import Image
 from io import BytesIO
 
-force_download = False
+# force_download = False
 
-sentiment_model = download_model(model_name = "tinybert-sentiment-analysis", modelType='text', force_download=force_download)
-twitter_model = download_model(model_name="tinybert-disaster-tweet", modelType='text', force_download=force_download)
+# sentiment_model = download_model(model_name = , modelType='text', force_download=force_download)
+# twitter_model = download_model(model_name="tinybert-disaster-tweet", modelType='text', force_download=force_download)
 # image_model = download_model(model_name="human_pose_classification", modelType='image', force_download=force_download)
 
 
@@ -35,7 +35,7 @@ def sentiment_analysis(data: NLPDataInput):
 
 @app.post("/disaster_classifier")
 def classify_disaster(data: NLPDataInput):
-    output = twitter_model(data.text)
+    output = disaster_model(data.text)
     return output
 
 # from IPython.display import display
