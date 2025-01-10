@@ -63,7 +63,7 @@ jobs:
             ssh -o StrictHostKeyChecking=no -i ${{ secrets.EC2_SSH_KEY }} ubuntu@${{ secrets.EC2_PUBLIC_IP }} << 'EOF'
             # Navigate to project directory (if it exists) or clone repo
             if [ ! -d "mlproduction" ]; then
-              git clone https://github.com/shahriar0999/ML-end-to-end-project-I.git.git my-fastapi-app
+              git clone https://github.com/shahriar0999/ML-end-to-end-project-I.git.git mlproduction
             fi
             cd mlproduction
         
