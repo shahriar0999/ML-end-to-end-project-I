@@ -15,7 +15,7 @@ force_download = False
 
 sentiment_model = download_model(model_name = "tinybert-sentiment-analysis", modelType='text', force_download=force_download)
 twitter_model = download_model(model_name="tinybert-disaster-tweet", modelType='text', force_download=force_download)
-image_model = download_model(model_name="human_pose_classification", modelType='image', force_download=force_download)
+# image_model = download_model(model_name="human_pose_classification", modelType='image', force_download=force_download)
 
 
 
@@ -41,17 +41,17 @@ def classify_disaster(data: NLPDataInput):
 from IPython.display import display
 
 
-@app.post("/pose_classifier")
-def classify_pose(data: ImageDataInput):
-    try:
-        url = str(data.url[0])
-        response = requests.get(url)
-        if response.status_code == 200:
-            image = Image.open(BytesIO(response.content))
-            output = image_model(image)
-        return output
-    except Exception as e:
-        output = {'error': str(e)}
+# @app.post("/pose_classifier")
+# def classify_pose(data: ImageDataInput):
+#     try:
+#         url = str(data.url[0])
+#         response = requests.get(url)
+#         if response.status_code == 200:
+#             image = Image.open(BytesIO(response.content))
+#             output = image_model(image)
+#         return output
+#     except Exception as e:
+#         output = {'error': str(e)}
 
 
 if __name__=="__main__":
