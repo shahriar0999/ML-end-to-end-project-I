@@ -59,7 +59,7 @@ jobs:
         # deploy to ec2
         - name: Deploy to AWS EC2
           run: |
-
+          
             # Set up SSH key
             mkdir -p ~/.ssh
             echo "${{ secrets.EC2_SSH_KEY }}" | tr -d '\r' > ~/.ssh/id_rsa
