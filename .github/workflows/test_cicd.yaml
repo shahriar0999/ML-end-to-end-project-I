@@ -57,13 +57,21 @@ jobs:
             aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
         
         # deploy to ec2
+        - name: Add SSH private key
+            run: |
+              mkdir -p ~/.ssh
+              echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
+              chmod 600 ~/.ssh/id_rsa
+
+          - name: Connect to EC2 and deploy
+            run: |
+              ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@${{ secrets.EC2_PUBLIC_IP }} << 'EOF'
+              # Your commands here
+              EOF
+              
         - name: Deploy to AWS EC2
           run: |
 
-
-            # SSH into EC2 instance
-            ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@${{ secrets.EC2_PUBLIC_IP }} << 'EOF'
-            
             # Navigate to project directory (if it exists) or clone repo
             if [ ! -d "mlproduction" ]; then
               git clone https://github.com/shahriar0999/ML-end-to-end-project-I.git.git mlproduction
