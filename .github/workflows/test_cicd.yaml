@@ -1,98 +1,200 @@
-# write ci/cd pipeline for this project
-name: CI
+# # write ci/cd pipeline for this project
+# name: CI
+
+# on:
+#     push:
+#         branches:
+#             - main
+#             - master
+
+# jobs:
+#     test:
+#         runs-on: ubuntu-latest
+
+#         steps:
+#         - name: Checkout code
+#           uses: actions/checkout@v4
+
+#         - name: Set up Python
+#           uses: actions/setup-python@v5
+#           with:
+#             python-version: '3.12'
+        
+#         - name: Install dependencies
+#           run: |
+#             python -m pip install --upgrade pip
+#             pip install -r requirements.txt
+
+#         - name: Configure AWS credentials
+#           uses: aws-actions/configure-aws-credentials@v4
+#           with:
+#             aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#             aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#             aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+#         - name: Download model from s3
+#           run: |
+#             python src/download_load_model.py
+
+#         - name: Run tests
+#           run: |
+#             pytest tests/test_main.py
+
+#     deploy:
+#       needs: test
+#       runs-on: ubuntu-latest
+
+#       steps:
+#         # checkout code
+#         - name: Checkout code
+#           uses: actions/checkout@v4
+
+#         # configure aws credentials
+#         - name: Configure AWS credentials
+#           uses: aws-actions/configure-aws-credentials@v4
+#           with:
+#             aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#             aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#             aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+        
+#         - name: Add SSH private key
+#           run: |
+#             mkdir -p ~/.ssh
+#             echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
+#             chmod 600 ~/.ssh/id_rsa
+
+#         - name: Connect to EC2 and deploy
+#           run: |
+#             ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@${{ secrets.EC2_PUBLIC_IP }} << 'EOF'
+#             # Your commands here
+#             EOF
+
+#         - name: Deploy to AWS EC2
+#           run: |
+
+#             # Navigate to project directory (if it exists) or clone repo
+#             if [ ! -d "mlproduction" ]; then
+#               git clone https://github.com/shahriar0999/ML-end-to-end-project-I.git.git mlproduction
+#             fi
+#             cd mlproduction
+        
+#             # pull latest changes
+#             git pull origin main
+
+#             # Set up python environment
+#             pip install --upgrade pip
+#             pip install -r requirements.txt
+
+#             # Stop any running FastAPI app
+#             pkill -f "python main.py" || true
+
+#             # Stop any streamlit app
+#             pkill -f "streamlit run streamlitApp.py" || true
+
+#             # Run FastAPI app
+#             nohup python main.py > fastapi.log 2>&1 &
+
+#             # Run Streamlit app
+#             nohup streamlit run streamlitApp.py --server.port 8501 > streamlit.log 2>&1 &
+#             EOF
+
+
+name: CI/CD Pipeline
 
 on:
-    push:
-        branches:
-            - main
-            - master
+  push:
+    branches:
+      - main
+      - master
 
 jobs:
-    test:
-        runs-on: ubuntu-latest
+  test:
+    runs-on: ubuntu-latest
 
-        steps:
-        - name: Checkout code
-          uses: actions/checkout@v4
+    steps:
+    # Step 1: Checkout Code
+    - name: Checkout code
+      uses: actions/checkout@v4
 
-        - name: Set up Python
-          uses: actions/setup-python@v5
-          with:
-            python-version: '3.12'
-        
-        - name: Install dependencies
-          run: |
-            python -m pip install --upgrade pip
-            pip install -r requirements.txt
+    # Step 2: Set up Python
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
 
-        - name: Configure AWS credentials
-          uses: aws-actions/configure-aws-credentials@v4
-          with:
-            aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-            aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-            aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
-        - name: Download model from s3
-          run: |
-            python src/download_load_model.py
+    # Step 3: Install Dependencies
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
 
-        - name: Run tests
-          run: |
-            pytest tests/test_main.py
+    # Step 4: Configure AWS Credentials
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
 
-    deploy:
-      needs: test
-      runs-on: ubuntu-latest
+    # Step 5: Download Model from S3
+    - name: Download model from S3
+      run: |
+        python src/download_load_model.py
 
-      steps:
-        # checkout code
-        - name: Checkout code
-          uses: actions/checkout@v4
+    # Step 6: Run Tests
+    - name: Run tests
+      run: |
+        pytest tests/test_main.py
 
-        # configure aws credentials
-        - name: Configure AWS credentials
-          uses: aws-actions/configure-aws-credentials@v4
-          with:
-            aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-            aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-            aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
-        
-        - name: Add SSH private key
-          run: |
-            mkdir -p ~/.ssh
-            echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
-            chmod 600 ~/.ssh/id_rsa
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
 
-        - name: Connect to EC2 and deploy
-          run: |
-            ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@${{ secrets.EC2_PUBLIC_IP }} << 'EOF'
-            # Your commands here
-            EOF
+    steps:
+    # Step 1: Checkout Code
+    - name: Checkout code
+      uses: actions/checkout@v4
 
-        - name: Deploy to AWS EC2
-          run: |
+    # Step 2: Configure AWS Credentials
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
 
-            # Navigate to project directory (if it exists) or clone repo
-            if [ ! -d "mlproduction" ]; then
-              git clone https://github.com/shahriar0999/ML-end-to-end-project-I.git.git mlproduction
-            fi
-            cd mlproduction
-        
-            # pull latest changes
-            git pull origin main
+    # Step 3: Add SSH Private Key
+    - name: Add SSH private key
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
 
-            # Set up python environment
-            pip install --upgrade pip
-            pip install -r requirements.txt
+    # Step 4: Connect to EC2 and Deploy
+    - name: Connect to EC2 and Deploy
+      run: |
+        ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@${{ secrets.EC2_PUBLIC_IP }} << 'EOF'
+        # Navigate to project directory (if it exists) or clone repo
+        if [ ! -d "mlproduction" ]; then
+          git clone https://github.com/shahriar0999/ML-end-to-end-project-I.git mlproduction
+        fi
+        cd mlproduction
 
-            # Stop any running FastAPI app
-            pkill -f "python main.py" || true
+        # Pull the latest changes
+        git pull origin main
 
-            # Stop any streamlit app
-            pkill -f "streamlit run streamlitApp.py" || true
+        # Set up Python environment
+        pip install --upgrade pip
+        pip install -r requirements.txt
 
-            # Run FastAPI app
-            nohup python main.py > fastapi.log 2>&1 &
+        # Stop any running FastAPI app
+        pkill -f "python main.py" || true
 
-            # Run Streamlit app
-            nohup streamlit run streamlitApp.py --server.port 8501 > streamlit.log 2>&1 &
-            EOF
+        # Stop any running Streamlit app
+        pkill -f "streamlit run streamlitApp.py" || true
+
+        # Run FastAPI app
+        nohup python main.py > fastapi.log 2>&1 &
+
+        # Run Streamlit app
+        nohup streamlit run streamlitApp.py --server.port 8501 > streamlit.log 2>&1 &
+        EOF
