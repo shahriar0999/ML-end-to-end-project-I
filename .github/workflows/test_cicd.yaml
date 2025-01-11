@@ -60,6 +60,10 @@ jobs:
         - name: Deploy to AWS EC2
           run: |
 
+            ~/.ssh
+            cat authorized_keys > TestKey.pem
+            chmod 400 "TestKey.pem"
+
             # SSH into EC2 instance
             ssh -i ${{ secrets.EC2_SSH_KEY }} ubuntu@${{ secrets.EC2_PUBLIC_IP }} 
             
