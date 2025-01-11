@@ -56,7 +56,7 @@ jobs:
             aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
             aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
         
-        # deploy to ec2
+        
         - name: Add SSH private key
           run: |
             mkdir -p ~/.ssh
