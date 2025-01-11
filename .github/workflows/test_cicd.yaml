@@ -165,6 +165,7 @@ jobs:
     # Step 3: Add SSH Private Key
     - name: Add SSH private key
       run: |
+        
         mkdir -p ~/.ssh
         echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
@@ -172,7 +173,7 @@ jobs:
     # Step 4: Connect to EC2 and Deploy
     - name: Connect to EC2 and Deploy
       run: |
-        ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@${{ secrets.EC2_PUBLIC_IP }} << 'EOF'
+        ssh -o StrictHostKeyChecking=no -i ${{ secrets.EC2_SSH_KEY }} ubuntu@${{ secrets.EC2_PUBLIC_IP }} << 'EOF'
         # Navigate to project directory (if it exists) or clone repo
         if [ ! -d "mlproduction" ]; then
           git clone https://github.com/shahriar0999/ML-end-to-end-project-I.git mlproduction
