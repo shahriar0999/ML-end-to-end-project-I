@@ -59,16 +59,16 @@ jobs:
         # deploy to ec2
         - name: Deploy to AWS EC2
           run: |
-          
+
             # Set up SSH key
             mkdir -p ~/.ssh
-            echo "${{ secrets.EC2_SSH_KEY }}" | tr -d '\r' > ~/.ssh/id_rsa
+            echo "${{ variables.EC2_SSH_KEY }}" | tr -d '\r' > ~/.ssh/id_rsa
             chmod 600 ~/.ssh/id_rsa
             eval $(ssh-agent -s)
             ssh-add ~/.ssh/id_rsa
 
             # SSH into EC2 instance
-            ssh -o StrictHostKeyChecking=no -i ${{ secrets.EC2_SSH_KEY }} ubuntu@${{ secrets.EC2_PUBLIC_IP }} << 'EOF'
+            ssh -o StrictHostKeyChecking=no -i ${{ variables.EC2_SSH_KEY }} ubuntu@${{ secrets.EC2_PUBLIC_IP }} << 'EOF'
             
             # Navigate to project directory (if it exists) or clone repo
             if [ ! -d "mlproduction" ]; then
