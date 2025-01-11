@@ -145,57 +145,57 @@ jobs:
       run: |
         pytest tests/test_main.py
 
-  deploy:
-    needs: test
-    runs-on: ubuntu-latest
+  # deploy:
+  #   needs: test
+  #   runs-on: ubuntu-latest
 
-    steps:
-    # Step 1: Checkout Code
-    - name: Checkout code
-      uses: actions/checkout@v4
+  #   steps:
+  #   # Step 1: Checkout Code
+  #   - name: Checkout code
+  #     uses: actions/checkout@v4
 
-    # Step 2: Configure AWS Credentials
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v4
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+  #   # Step 2: Configure AWS Credentials
+  #   - name: Configure AWS credentials
+  #     uses: aws-actions/configure-aws-credentials@v4
+  #     with:
+  #       aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  #       aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  #       aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
 
-    # Step 3: Add SSH Private Key
-    - name: Add SSH private key
-      run: |
+  #   # Step 3: Add SSH Private Key
+  #   - name: Add SSH private key
+  #     run: |
         
-        mkdir -p ~/.ssh
-        echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
+  #       mkdir -p ~/.ssh
+  #       echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
+  #       chmod 600 ~/.ssh/id_rsa
 
-    # Step 4: Connect to EC2 and Deploy
-    - name: Connect to EC2 and Deploy
-      run: |
-        ssh -o StrictHostKeyChecking=no -i ${{ secrets.EC2_SSH_KEY }} ubuntu@${{ secrets.EC2_PUBLIC_IP }} << 'EOF'
-        # Navigate to project directory (if it exists) or clone repo
-        if [ ! -d "mlproduction" ]; then
-          git clone https://github.com/shahriar0999/ML-end-to-end-project-I.git mlproduction
-        fi
-        cd mlproduction
+  #   # Step 4: Connect to EC2 and Deploy
+  #   - name: Connect to EC2 and Deploy
+  #     run: |
+  #       ssh -o StrictHostKeyChecking=no -i ${{ secrets.EC2_SSH_KEY }} ubuntu@${{ secrets.EC2_PUBLIC_IP }} << 'EOF'
+  #       # Navigate to project directory (if it exists) or clone repo
+  #       if [ ! -d "mlproduction" ]; then
+  #         git clone https://github.com/shahriar0999/ML-end-to-end-project-I.git mlproduction
+  #       fi
+  #       cd mlproduction
 
-        # Pull the latest changes
-        git pull origin main
+  #       # Pull the latest changes
+  #       git pull origin main
 
-        # Set up Python environment
-        pip install --upgrade pip
-        pip install -r requirements.txt
+  #       # Set up Python environment
+  #       pip install --upgrade pip
+  #       pip install -r requirements.txt
 
-        # Stop any running FastAPI app
-        pkill -f "python main.py" || true
+  #       # Stop any running FastAPI app
+  #       pkill -f "python main.py" || true
 
-        # Stop any running Streamlit app
-        pkill -f "streamlit run streamlitApp.py" || true
+  #       # Stop any running Streamlit app
+  #       pkill -f "streamlit run streamlitApp.py" || true
 
-        # Run FastAPI app
-        nohup python main.py > fastapi.log 2>&1 &
+  #       # Run FastAPI app
+  #       nohup python main.py > fastapi.log 2>&1 &
 
-        # Run Streamlit app
-        nohup streamlit run streamlitApp.py --server.port 8501 > streamlit.log 2>&1 &
-        EOF
+  #       # Run Streamlit app
+  #       nohup streamlit run streamlitApp.py --server.port 8501 > streamlit.log 2>&1 &
+  #       EOF
